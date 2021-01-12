@@ -8,8 +8,8 @@ KAFKA_PRODUCER_BOOTSTRAP_SERVERS = "KAFKA_PRODUCER_BOOTSTRAP_SERVERS"
 def get_properties_file_path():
     if os.path.exists(__CONFIG_FILE):
         return __CONFIG_FILE
-    elif os.path.exists("../../" + __CONFIG_FILE):
-        return "../../" + __CONFIG_FILE
+    elif os.path.exists("../../../" + __CONFIG_FILE):
+        return "../../../" + __CONFIG_FILE
     else:
         raise ValueError("Config cannot load")
 
