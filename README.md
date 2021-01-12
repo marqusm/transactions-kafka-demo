@@ -6,3 +6,6 @@ As a basic case, there is idea about many transactions between bank accounts.
 Run local Confluent All-In-One Kafka cluster \
 `docker-compose -f docker-compose/docker-compose-confluent-kafka.yaml up -d`
 
+### Python
+Run Python producer \
+`python3 ./python/app/kafka-producer.py --producer-name producer_1`
