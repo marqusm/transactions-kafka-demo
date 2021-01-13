@@ -3,24 +3,30 @@ The purpose of this project is to test Kafka cluster in different environments a
 As a basic case, there is idea about many transactions between bank accounts.
 
 
-
-## Commands
+## Kafka cluster
 Run local Confluent All-In-One Kafka cluster \
-`docker-compose -f docker-compose/docker-compose-confluent-kafka.yaml up -d`
+`docker-compose -f docker-compose/docker-compose-confluent-kafka.yaml --env-file project.properties up -d`
+
+Stop local Confluent All-In-One Kafka cluster \
+`docker-compose -f docker-compose/docker-compose-confluent-kafka.yaml --env-file project.properties down`
 
 
-
-### Python
-
-#### Preparation
+## Python
 Install necessary packages \
 `pip3 install -r src/main/python/requirements.txt`
 
-OR
-
-Create docker image \
-`docker build -f docker/Dockerfile-python-producer -t python-producer:latest .`
-
-#### Running
 Run Python producer \
 `python3 src/main/python/kafka-producer.py --producer-name producer_1`
+
+
+## Python docker
+
+_Hint: To run commands in Docker container, you have to specify
+real IP address (your local machine) instead of **localhost**
+in **project.properties** file._
+
+Create docker images \
+`bash bash/build-python-dockers.sh`
+
+Run Python producer in a docker container \
+`docker run -t -i --rm python-kafka-producer python3 kafka-producer.py --producer-name producer_1`

@@ -17,7 +17,8 @@ def get_properties_file_path():
 class Configuration:
     def __init__(self):
         with open(get_properties_file_path()) as stream:
-            parsed_lines = [line.split("=") for line in stream.readlines() if line[0] != '#']
+            parsed_lines = [line.split("=") for line in stream.readlines() if
+                            line[0] != '#' and len(line.split("=")) == 2]
             self.values = {key.strip(): value.strip() for key, value in parsed_lines}
 
 

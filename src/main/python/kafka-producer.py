@@ -34,6 +34,8 @@ def generate_transactions(producer_name, accounts_count=100, min_value=0, max_va
 
     start_time = time.time()
     count = 0
+    start_leap_time = start_time
+    start_leap_count = count
     try:
         while True:
             transaction_uuid = uuid.uuid4()
@@ -46,23 +48,22 @@ def generate_transactions(producer_name, accounts_count=100, min_value=0, max_va
             transaction = model.Transaction(transaction_uuid, src_account_id, dst_account_id, amount, timestamp)
             transaction_json = json.dumps(transaction.__dict__, cls=util.JsonEncoder)
 
-            print("producer={}\ttransaction={}".format(producer_name, transaction_json))
-
             producer.produce(config.get_str_value(config.KAFKA_TOPIC_NAME), key=str(transaction.transaction_id),
                              value=transaction_json)
             producer.flush()
-
             count += 1
 
+            current_time = time.time()
+            if current_time - start_leap_time > 1:
+                current_leap_time = current_time - start_leap_time
+                current_count = count - start_leap_count
+                current_rate = round(current_count / current_leap_time, 2)
+                print("\r                                                                                     ", end="")
+                print("\rCreated transactions count: {}. Current rate: {} trans/s".format(count, current_rate), end="")
+                start_leap_time = current_time
+                start_leap_count = count
     except KeyboardInterrupt:
-        print("Terminated execution")
-        pass
-
-    finally:
-        passed_time = time.time() - start_time
-        print("Execution time: {}s".format(round(passed_time)))
-        print("Transactions created: {}".format(count))
-        print("Transactions creation rate: {} trans/s".format(round(count / passed_time, 2)))
+        print()
 
 
 main()
